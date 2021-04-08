@@ -1,8 +1,8 @@
 pragma solidity >=0.4.21 <0.8.4;
 
-contract FreeLake {
-    string  public name = "FreeLake Token";
-    string  public symbol = "FLK";
+contract FreeDai {
+    string  public name = "Free DAI";
+    string  public symbol = "fDAI";
     uint256 public totalSupply = 1000000000000000000000000; // 1 million tokens
     uint8   public decimals = 18;
 

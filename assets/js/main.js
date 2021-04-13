@@ -1,6 +1,18 @@
 (function ($)
   { "use strict"
   
+// My functions
+$("#stakeBtn1").on("click",function(){
+  var elmnt = document.getElementById("stakeArea");
+  elmnt.scrollIntoView({behavior:'smooth'});
+});
+
+// My functions
+$("#contbtn").on("click",function(){
+  var elmnt = document.getElementById("contArea");
+  elmnt.scrollIntoView({behavior:'smooth'});
+})
+
 /* 1. Proloder */
     $(window).on('load', function () {
       $('#preloader-active').delay(450).fadeOut('slow');
@@ -8,6 +20,8 @@
         'overflow': 'visible'
       });
     });
+
+
 
 /* 2. sticky And Scroll UP */
     $(window).on('scroll', function () {
@@ -230,6 +244,7 @@
           }
         });
       }
+
 
 
 

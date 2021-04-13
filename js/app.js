@@ -127,9 +127,11 @@ $(function () {
     async function fetchHistory() {
         totalHistory = await window.contract.methods.txid().call();
         transactionList = `<div class="col-3">Date</div><div class="col-6">Transaction type</div><div class="col-3">Amount</div>`;
+        counter = 0;
         for (var i = totalHistory; i >= 0; i--) {
             currenttxAddress = await window.contract.methods.history(i).call();
             if (window.connected_account == currenttxAddress[0]) {
+                counter++;
                 // converting date
                 let unix_timestamp = currenttxAddress[3];
                 // Create a new JavaScript Date object based on the timestamp
@@ -174,6 +176,9 @@ $(function () {
                             <div class=" alert alert-${Alert} col-6">${desc}</div>
                             <div class=" alert alert-${Alert} col-3">${amount} fDAI</div>
                     `
+            }
+            if(counter==10){
+                break;
             }
         }
 

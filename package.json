@@ -1,0 +1,22 @@
+{
+  "name": "freelake",
+  "version": "1.0.0",
+  "description": "This is the github repository of Binance African Masterclass in Blockchain development 2021 - Group 31",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iyidaclem/masterclassGroup31.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iyidaclem/masterclassGroup31/issues"
+  },
+  "homepage": "https://github.com/iyidaclem/masterclassGroup31#readme",
+  "dependencies": {
+    "web3": "^1.3.5"
+  }
+}

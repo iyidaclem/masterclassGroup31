@@ -33,18 +33,18 @@ contract FreeDai {
         return true;
     }
 
-    function approve(address _spender, uint256 _value) public returns (bool success) {
-        allowance[msg.sender][_spender] = _value;
-        emit Approval(msg.sender, _spender, _value);
+    function approve(address investor, uint256 _value) public returns (bool success) {
+        allowance[investor][msg.sender] = _value; // msg.sender is the farm contract address
+        emit Approval(investor, msg.sender, _value);
         return true;
     }
 
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
         require(_value <= balanceOf[_from]);
-        require(_value <= allowance[_from][msg.sender]);
+        require(_value <= allowance[_from][_to]);
         balanceOf[_from] -= _value;
         balanceOf[_to] += _value;
-        allowance[_from][msg.sender] -= _value;
+        allowance[_from][_to] -= _value;
         emit Transfer(_from, _to, _value);
         return true;
     }

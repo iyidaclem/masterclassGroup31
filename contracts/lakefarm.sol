@@ -8,12 +8,14 @@ contract LakeFarm {
     FreeLake public freeLake;
     FreeDai public freeDai;
     address public owner;
+    
    
-
     address[] public stakers;
     mapping(address => uint256) public stakingBalance;
     mapping(address => bool) public hasStaked;
     mapping(address => bool) public isStaking;
+    mapping(uint256=>tx) public history; //For keeing track of transaction history
+    uint256 public txid = 0; //Transaction id
 
     constructor(address _freeDai, address _freeLake) public {
         freeLake = FreeLake(_freeLake);
@@ -21,15 +23,35 @@ contract LakeFarm {
         owner = msg.sender;
     }
 
-    //1. Stakes Tokens
+    struct tx {
+        address  _address;
+        uint256 _amount;
+        string _type;
+        uint256 _date;
+    }
+    
+    // Tracking the transaction history
+     function setHist(string memory _type, uint256 _amount) internal returns(bool success) {
+         history[txid] = tx(msg.sender,_amount,_type,block.timestamp);
+        txid++;
+        return success;
+    }
+     function fDaiBal(address _address) public  returns (uint256){
+         return (freeDai.balanceOf(_address));
+     }
+      function flkBal(address _address) public  returns (uint256){
+         return (freeLake.balanceOf(_address));
+     }
+    //Stakes Tokens
     function stakeTokens(uint256 _amount) public {
         require(_amount > 0, "You cannot stake 0 tokens");
-
-        // Approve the transfer from
-        require(freeDai.approve(address(this), _amount), "Approval Failed");
+        
+        // approve freeDai transfer
+        require( freeDai.approve(msg.sender, _amount),"Approval failed");
+   
 
         //Transfer Mock Dai tokens to this contract for staking
-        // freeDai.transferFrom(msg.sender, address(this), _amount);
+        freeDai.transferFrom(msg.sender, address(this), _amount);
 
         // Update staking balance
         stakingBalance[msg.sender] += _amount;
@@ -41,6 +63,9 @@ contract LakeFarm {
         // updating the staking status
         isStaking[msg.sender] = true;
         hasStaked[msg.sender] = true;
+        
+        // Save transaction history
+        setHist("stake",_amount);
     }
 
     //Unstaking tokens (Widthdraw)
@@ -52,13 +77,16 @@ contract LakeFarm {
         require(balance > 0, "Staking balance cannot be 0");
 
         //Transfer Mock Dai tokens from this contract to the staker address
-        // freeDai.transfer(msg.sender,balance);
+        freeDai.transfer(msg.sender,balance);
 
         // Reset staking balance
         stakingBalance[msg.sender] = 0;
 
         //Update staking status
         isStaking[msg.sender] = false;
+        
+        // Save transaction history
+        setHist("unstake",balance);
 
     }
 
@@ -67,13 +95,15 @@ contract LakeFarm {
     function issueTokens() public {
         // only owner can call this function
         require(msg.sender==owner,"caller must be the owner");
-
         // issue token to the stakers
         for(uint i=0; i<stakers.length; i++){
             address recipient = stakers[i];
             uint balance = stakingBalance[recipient];
             if(balance>0){
-                // freeLake.transfer(recipient,balance);
+                freeLake.transfer(recipient,balance);
+                
+                // Save transaction history
+                    setHist("issuedToken",balance);
             }
         }
     }

@@ -31,16 +31,22 @@ contract LakeFarm {
     }
     
     // Tracking the transaction history
-     function setHist(string memory _type, uint256 _amount) internal returns(bool success) {
-         history[txid] = tx(msg.sender,_amount,_type,block.timestamp);
+     function setHist(address _address, string memory _type, uint256 _amount) internal returns(bool success) {
+         history[txid] = tx(_address,_amount,_type,block.timestamp);
         txid++;
         return success;
     }
+
+    //FreeDai balance
      function fDaiBal(address _address) public  returns (uint256){
-         return (freeDai.balanceOf(_address));
+         uint256 balance = freeDai.getBalance(_address);
+         return balance;
      }
+
+     //FreeLake balance
       function flkBal(address _address) public  returns (uint256){
-         return (freeLake.balanceOf(_address));
+         uint256 balance = freeLake.getBalance(_address);
+         return balance;
      }
     //Stakes Tokens
     function stakeTokens(uint256 _amount) public {
@@ -65,7 +71,7 @@ contract LakeFarm {
         hasStaked[msg.sender] = true;
         
         // Save transaction history
-        setHist("stake",_amount);
+        setHist(msg.sender,"stake",_amount);
     }
 
     //Unstaking tokens (Widthdraw)
@@ -86,7 +92,7 @@ contract LakeFarm {
         isStaking[msg.sender] = false;
         
         // Save transaction history
-        setHist("unstake",balance);
+        setHist(msg.sender, "unstake",balance);
 
     }
 
@@ -101,9 +107,8 @@ contract LakeFarm {
             uint balance = stakingBalance[recipient];
             if(balance>0){
                 freeLake.transfer(recipient,balance);
-                
                 // Save transaction history
-                    setHist("issuedToken",balance);
+                setHist(recipient, "issuedToken",balance);
             }
         }
     }

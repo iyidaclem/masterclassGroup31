@@ -25,6 +25,11 @@ contract FreeDai {
         balanceOf[msg.sender] = totalSupply;
     }
 
+     function getBalance(address _address) public returns (uint256 balance){
+        uint256 balance = balanceOf[_address];
+        return balance;
+    }
+
     function transfer(address _to, uint256 _value) public returns (bool success) {
         require(balanceOf[msg.sender] >= _value);
         balanceOf[msg.sender] -= _value;
